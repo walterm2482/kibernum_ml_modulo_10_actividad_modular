@@ -1,106 +1,140 @@
-# Actividad Modular - Kibernum Academy - MLOps / Machine Learning
+# Actividad Modular - Kibernum Academy
 
-## Descripción
-Proyecto final del módulo 10.  
-Implementa un flujo completo de **entrenamiento de modelo**, **API Flask**, **tests automatizados** y **despliegue en Docker**.
+## MLOps / Machine Learning
 
-El modelo usa datos de diagnóstico de cáncer de mama (Breast Cancer Wisconsin dataset) y realiza predicciones sobre si un caso es *maligno* o *benigno*.
+### Descripción
 
----
+Proyecto final del módulo 10: desarrollo completo de un flujo de
+**Machine Learning**, incluyendo:
+
+-   Entrenamiento y serialización del modelo\
+-   Exposición de una **API REST** con Flask\
+-   Pruebas automatizadas con `pytest`\
+-   Despliegue reproducible en **Docker**
+
+El modelo usa el dataset **Breast Cancer Wisconsin** para predecir si un
+caso es *maligno* o *benigno*.
+
+------------------------------------------------------------------------
 
 ## Estructura del proyecto
-```
-.
-├── app.py                  # API Flask con endpoints /
-├── train_model.py          # Entrenamiento y serialización del modelo
-├── logger.py               # Logger centralizado
-├── model.joblib            # Modelo entrenado
-├── test_api.py             # Test de ping y predicción
-├── test_api_errors.py      # Test de errores en la API
-├── requirements.txt        # Dependencias del entorno
-├── Dockerfile              # Imagen de despliegue
-├── docker-compose.yml      # Configuración de servicio
-├── ping.json               # Ejemplo respuesta / (ping)
-├── predict.json            # Ejemplo respuesta /predict
-└── README.md
-```
 
----
+    .
+    ├── app.py
+    ├── train_model.py
+    ├── logger.py
+    ├── model.joblib
+    ├── test_api.py
+    ├── test_api_errors.py
+    ├── requirements.txt
+    ├── Dockerfile
+    ├── docker-compose.yml
+    ├── ping.json
+    ├── predict.json
+    ├── imgs/
+    └── README.md
 
-## Requisitos
+------------------------------------------------------------------------
 
-- Python 3.12  
-- scikit-learn 1.7.2  
-- Docker y Docker Compose  
-- pytest  
+## Instalación local
 
-Instalación local:
-```bash
+``` bash
 python -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
----
+------------------------------------------------------------------------
 
-## Entrenamiento del modelo
-```bash
+## 1️⃣ Entrenamiento del modelo
+
+``` bash
 python train_model.py
 ```
-Genera `model.joblib` con un **RandomForestClassifier**.
 
----
+Genera `model.joblib` con un **RandomForestClassifier**.\
+**Evidencia:**\
+![Entrenamiento del modelo](imgs/01_entrenamiento_modelo.png)
 
-## Ejecución de la API local
-```bash
+------------------------------------------------------------------------
+
+## 2️⃣ Tests automatizados
+
+``` bash
+pytest -q
+```
+
+**Evidencia:**\
+![Tests pytest](imgs/02_tests_pytest.png)
+
+------------------------------------------------------------------------
+
+## 3️⃣ Ejecución de la API local
+
+``` bash
 python app.py
 ```
 
-Prueba endpoints:
-```bash
-# Ping
-curl http://127.0.0.1:8000/
+Verifica el estado:
 
-# Predicción
+``` bash
+curl http://127.0.0.1:8000/
+```
+
+**Evidencia:**\
+![Ping API](imgs/03_api_ping.png)
+
+------------------------------------------------------------------------
+
+## 4️⃣ Predicción del modelo
+
+``` bash
 curl -X POST http://127.0.0.1:8000/predict   -H "Content-Type: application/json"   -d '{"features":[17.99,10.38,122.8,1001,0.1184,0.2776,0.3001,0.1471,0.2419,0.07871,
                    1.095,0.9053,8.589,153.4,0.0064,0.049,0.0537,0.0159,0.03,0.00619,
                    25.38,17.33,184.6,2019,0.1622,0.6656,0.7119,0.2654,0.4601,0.1189]}'
 ```
 
 Ejemplo de respuesta:
-```json
+
+``` json
 {"classes":["malignant"],"predictions":[0],"probabilities":[[0.96,0.04]]}
 ```
 
----
+**Evidencia:**\
+![Predicción](imgs/04_api_predict.png)
 
-## Ejecución con Docker
+------------------------------------------------------------------------
 
-Construir imagen:
-```bash
+## 5️⃣ Despliegue con Docker
+
+**Construcción de imagen:**
+
+``` bash
 docker build -t mlops-bc:latest .
 ```
 
-Ejecutar contenedor:
-```bash
+![Docker build](imgs/05_docker_build.png)
+
+**Ejecución del contenedor:**
+
+``` bash
 docker run -d --name mlops-bc -p 8000:8000 mlops-bc:latest
 ```
 
-Probar:
-```bash
-curl http://127.0.0.1:8000/
-curl -X POST http://127.0.0.1:8000/predict -H "Content-Type: application/json" -d '{"features":[17.99,10.38,122.8,1001,0.1184,0.2776,0.3001,0.1471,0.2419,0.07871,1.095,0.9053,8.589,153.4,0.0064,0.049,0.0537,0.0159,0.03,0.00619,25.38,17.33,184.6,2019,0.1622,0.6656,0.7119,0.2654,0.4601,0.1189]}'
+![Docker run](imgs/06_docker_run.png)
+
+**Contenedor activo:**
+
+``` bash
+docker ps
 ```
 
----
+![Docker ps](imgs/07_docker_ps.png)
 
-## Tests automatizados
-```bash
-pytest -q
-```
-
----
+------------------------------------------------------------------------
 
 ## Autor
-**Walter M.**  
-Repositorio: [kibernum_ml_modulo_10_actividad_modular](https://github.com/walterm2482/kibernum_ml_modulo_10_actividad_modular)
+
+**Walter M.**\
+Repositorio:
+[kibernum_ml_modulo_10_actividad_modular](https://github.com/walterm2482/kibernum_ml_modulo_10_actividad_modular)
